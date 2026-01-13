@@ -1,6 +1,8 @@
 # Peer-2-Peer-Lending-System
 
 Introduction
+
+
 The traditional way of funding for a college student aspiring to venture into the world of start-ups with creative ideas and technology that can potentially bring a change to the society, include, going to banks to acquire bank loans or getting a funding via research and scholarship programs. However, this process is cumbersome, involves a lot of time and eligibility constraints. The aim of this project is to eliminate the middleman (bank) and create a platform for Northeastern Students by connecting students to alumni investors through a Peer-2-Peer lending system which would enable students to acquire loans for their entrepreneurial ventures with the help of strong alumni networks.
 The aim is to create a platform that is decentralized and has a secure environment for loan transactions and is beneficial for both borrowers and lenders. This platform would provide flexible financing options for students, and alumni will also benefit from earning good returns as the middleman (bank) is obsolete in this picture.
 Objective
