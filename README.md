@@ -24,21 +24,40 @@ The P2P lending platform offers a secure environment for loan transactions in ex
 
 Requirements
 1.A borrower (student) can establish one start up idea in their profile at one time, however, the idea can fall into any category (tech, health, finance, fashion etc.)
+
 2.A borrower (student) can request zero to many loans.
+
 3.A lender (investor/alumni) can invest in zero to many ideas.
+
 4.One loan can have only one borrower (to prevent shared ownership on the loan)
+
 5.One loan can have multiple investors
+
 6.One borrower can have different repayment schedules (as one borrower may have multiple investors)
+
 7.One loan must have only one repayment schedule
+
 8.A borrower can have multiple transaction records
+
 9.A transaction record is linked to only one loan application
+
 10.One loan application can have multiple transaction records
+
 11.A loan request can have zero or many collateral
+
 12.A loan application can have different status (approved, pending, dispersed). This loan status may change over time
+
 13.A dispute may be tied to one loan
+
 14.A user (both borrower and lender) can have multiple loan histories tied to them
+
 15.A user (both borrower and lender) can receive multiple notifications
+
 16.One loan application is tied to multiple audit logs
+
 17.One user is tied to multiple audit logs
+
 18.One user (both borrower and lender) can have multiple ratings and feedback
+
 19.A user can have multiple referrals
+
