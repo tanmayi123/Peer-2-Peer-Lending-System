@@ -15,6 +15,8 @@ The main objective of the P2P platform for northeastern students is to:
 
 
 1.Help students (borrowers) to bring forward their start up ideas and get funding from alumni investors
+
+
 2.Help Alumni (lenders) invest in and fund student start-ups, negotiate loan payment terms and gain back returns on their investments
 
 Theory for P2P Lending Platform
