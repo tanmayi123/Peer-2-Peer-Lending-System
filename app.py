@@ -12,7 +12,7 @@ try:
     DB_URL = st.secrets["DB_URL"]
 except Exception:
     DB_URL = os.getenv("DB_URL")
-
+st.write("DB_URL starts with:", DB_URL[:30] if DB_URL else "NONE - URL is empty")
 engine = create_engine(DB_URL)
 
 def run_query(query):
