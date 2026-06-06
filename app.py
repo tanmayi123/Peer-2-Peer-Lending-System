@@ -297,6 +297,7 @@ with st.sidebar:
     page = st.radio(
         label="",
         options=[
+            "Home",
             "Platform Overview",
             "Borrower Risk Analysis",
             "Lender Performance",
@@ -316,6 +317,111 @@ with st.sidebar:
         </div>
     """, unsafe_allow_html=True)
 
+
+if page == "Home":
+    st.markdown("""
+        <div class="page-header">
+            <div class="accent-bar"></div>
+            <div class="page-title">Peer-to-Peer Lending<br>Analytics Platform</div>
+            <div class="page-subtitle">Built on a live PostgreSQL database hosted on Supabase</div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+        <div style="max-width: 720px; margin-bottom: 40px;">
+            <p style="font-size:16px; color:#3A3A5A; line-height:1.8; font-weight:300;">
+            Traditional funding for student entrepreneurs involves banks, research grants, and scholarship 
+            programs — processes that are slow, rigid, and full of eligibility barriers. This platform 
+            eliminates the middleman by connecting Northeastern University students directly to alumni 
+            investors through a peer-to-peer lending system.
+            </p>
+            <p style="font-size:16px; color:#3A3A5A; line-height:1.8; font-weight:300; margin-top:16px;">
+            The analytics dashboard surfaces insights across the full loan lifecycle — from application 
+            and approval through funding, repayment, and dispute resolution — giving both borrowers and 
+            lenders a transparent view of platform activity.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.markdown("""
+            <div class="kpi-card">
+                <div class="kpi-label">Database</div>
+                <div class="kpi-value" style="font-size:22px">PostgreSQL</div>
+                <div class="kpi-sub">Hosted on Supabase, 18 tables, 3 user types</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("""
+            <div class="kpi-card">
+                <div class="kpi-label">Data Pipeline</div>
+                <div class="kpi-value" style="font-size:22px">Python + Faker</div>
+                <div class="kpi-sub">300 users, 300 loans, synthetic data generated programmatically</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    with col3:
+        st.markdown("""
+            <div class="kpi-card">
+                <div class="kpi-label">Analytics Layer</div>
+                <div class="kpi-value" style="font-size:22px">6 SQL Views</div>
+                <div class="kpi-sub">Derived metrics including LTV ratio, repayment health, risk scoring</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">What Each Page Covers</div>', unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("""
+            <div style="background:#ffffff; border-radius:16px; padding:24px; border:1px solid #EEEEF4; margin-bottom:16px;">
+                <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#7C6AF7; font-weight:600; margin-bottom:8px">Platform Overview</div>
+                <div style="font-size:14px; color:#3A3A5A; line-height:1.7; font-weight:300">Monthly loan volumes, approval rate trends, dispute frequency and application status breakdown across the full platform history</div>
+            </div>
+            <div style="background:#ffffff; border-radius:16px; padding:24px; border:1px solid #EEEEF4; margin-bottom:16px;">
+                <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#F76A8A; font-weight:600; margin-bottom:8px">Borrower Risk Analysis</div>
+                <div style="font-size:14px; color:#3A3A5A; line-height:1.7; font-weight:300">Loan-to-value ratios, collateral coverage, rejection rates and dispute counts per borrower — identifying high-risk and high-performing profiles</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("""
+            <div style="background:#ffffff; border-radius:16px; padding:24px; border:1px solid #EEEEF4; margin-bottom:16px;">
+                <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#4ECDC4; font-weight:600; margin-bottom:8px">Lender Performance</div>
+                <div style="font-size:14px; color:#3A3A5A; line-height:1.7; font-weight:300">Total capital deployed, fund status breakdowns, average ratings and interest rate positioning across all lenders on the platform</div>
+            </div>
+            <div style="background:#ffffff; border-radius:16px; padding:24px; border:1px solid #EEEEF4; margin-bottom:16px;">
+                <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#FFB347; font-weight:600; margin-bottom:8px">Repayment Health</div>
+                <div style="font-size:14px; color:#3A3A5A; line-height:1.7; font-weight:300">Outstanding balances, repayment completion rates, overdue loan tracking and payment health status across the entire loan portfolio</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">Tech Stack</div>', unsafe_allow_html=True)
+
+    cols = st.columns(6)
+    stack = [
+        ("PostgreSQL", "Database"),
+        ("Supabase", "Cloud Hosting"),
+        ("Python", "Data Pipeline"),
+        ("Faker", "Data Generation"),
+        ("Streamlit", "Dashboard"),
+        ("Plotly", "Visualizations"),
+    ]
+    for col, (tech, role) in zip(cols, stack):
+        col.markdown(f"""
+            <div style="background:#ffffff; border-radius:12px; padding:16px 12px; border:1px solid #EEEEF4; text-align:center;">
+                <div style="font-size:13px; font-weight:600; color:#1a1a1a; margin-bottom:4px">{tech}</div>
+                <div style="font-size:11px; color:#9898B0">{role}</div>
+            </div>
+        """, unsafe_allow_html=True)
 
 # ── PAGE 1: PLATFORM OVERVIEW ────────────────────────────────────────────────
 if page == "Platform Overview":
