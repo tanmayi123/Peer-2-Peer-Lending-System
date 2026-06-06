@@ -15,18 +15,27 @@ except Exception:
     DB_URL = os.getenv("DB_URL")
 
 def run_query(query):
-    parsed = urllib.parse.urlparse(DB_URL)
-    conn = psycopg2.connect(
-        host=parsed.hostname,
-        port=parsed.port or 5432,
-        database=parsed.path.lstrip("/"),
-        user=parsed.username,
-        password=urllib.parse.unquote(parsed.password),
-        sslmode="require"
-    )
-    df = pd.read_sql(query, conn)
-    conn.close()
-    return df
+    try:
+        parsed = urllib.parse.urlparse(DB_URL)
+        st.write("Host:", parsed.hostname)
+        st.write("Port:", parsed.port)
+        st.write("DB:", parsed.path.lstrip("/"))
+        st.write("User:", parsed.username)
+        st.write("Password length:", len(urllib.parse.unquote(parsed.password)) if parsed.password else 0)
+        conn = psycopg2.connect(
+            host=parsed.hostname,
+            port=parsed.port or 5432,
+            database=parsed.path.lstrip("/"),
+            user=parsed.username,
+            password=urllib.parse.unquote(parsed.password),
+            sslmode="require"
+        )
+        df = pd.read_sql(query, conn)
+        conn.close()
+        return df
+    except Exception as e:
+        st.error(f"Connection error: {str(e)}")
+        st.stop()
 
 st.set_page_config(
     page_title="P2P Lending Analytics",
