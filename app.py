@@ -2,9 +2,10 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from sqlalchemy import create_engine, text
+import psycopg2
 from dotenv import load_dotenv
 import os
+import urllib.parse
 
 load_dotenv()
 
@@ -12,12 +13,20 @@ try:
     DB_URL = st.secrets["DB_URL"]
 except Exception:
     DB_URL = os.getenv("DB_URL")
-st.write("DB_URL starts with:", DB_URL[:30] if DB_URL else "NONE - URL is empty")
-engine = create_engine(DB_URL)
 
 def run_query(query):
-    with engine.connect() as conn:
-        return pd.read_sql(text(query), conn)
+    parsed = urllib.parse.urlparse(DB_URL)
+    conn = psycopg2.connect(
+        host=parsed.hostname,
+        port=parsed.port or 5432,
+        database=parsed.path.lstrip("/"),
+        user=parsed.username,
+        password=urllib.parse.unquote(parsed.password),
+        sslmode="require"
+    )
+    df = pd.read_sql(query, conn)
+    conn.close()
+    return df
 
 st.set_page_config(
     page_title="P2P Lending Analytics",
