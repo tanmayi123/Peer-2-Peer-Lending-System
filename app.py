@@ -7,7 +7,12 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-DB_URL = os.getenv("DB_URL")
+
+try:
+    DB_URL = st.secrets["DB_URL"]
+except Exception:
+    DB_URL = os.getenv("DB_URL")
+
 engine = create_engine(DB_URL)
 
 def run_query(query):
