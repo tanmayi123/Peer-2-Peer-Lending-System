@@ -329,7 +329,7 @@ if page == "Home":
         <div style="max-width: 720px; margin-bottom: 40px;">
             <p style="font-size:16px; color:#3A3A5A; line-height:1.8; font-weight:300;">
             Traditional funding for student entrepreneurs involves banks, research grants, and scholarship
-            programs, processes that are slow, rigid, and full of eligibility barriers. This platform stimulates a more dynamic funding ecosystem by
+            programs, processes that are slow, rigid, and full of eligibility barriers. This platform simulates a more dynamic funding ecosystem by
             by eliminating the middleman by connecting Northeastern University students directly to alumni
             investors through a peer-to-peer lending system.
             </p>
