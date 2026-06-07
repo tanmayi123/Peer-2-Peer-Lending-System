@@ -6,9 +6,14 @@ Live Dashboard: [Streamlit App](https://your-app.streamlit.app)
 
 Tableau: [P2P Lending Platform Overview](https://public.tableau.com/app/profile/tanmayi.shurpali/viz/P2P-Lending-System/P2PLendingSystem-PlatformOverview)
 
+<img width="1512" height="821" alt="p2p1" src="https://github.com/user-attachments/assets/af0980dc-6000-42e0-8819-e8d21326287d" />
+
 <img width="1509" height="821" alt="p2p2" src="https://github.com/user-attachments/assets/9d2aa288-427c-4625-931c-9954b521f33a" />
 
-<img width="1512" height="821" alt="p2p1" src="https://github.com/user-attachments/assets/af0980dc-6000-42e0-8819-e8d21326287d" />
+<img width="1512" height="784" alt="Tableau" src="https://github.com/user-attachments/assets/92564f6f-020b-4863-ab6d-1675f616edec" />
+
+
+
 
 
 
