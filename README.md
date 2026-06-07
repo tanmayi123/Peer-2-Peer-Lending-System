@@ -1,71 +1,243 @@
-# Peer-2-Peer-Lending-System
+# Peer-to-Peer Lending Analytics System
 
-Introduction
+A full-stack data analytics and data engineering project built around a peer-to-peer lending platform connecting University student borrowers with alumni investors. The project covers the entire data pipeline from database design and synthetic data generation through to a deployed interactive dashboard and published Tableau visualizations. This project is only a simulation of P2P Lending system.
 
+Live Dashboard: [Streamlit App](https://your-app.streamlit.app)
 
-The traditional way of funding for a college student aspiring to venture into the world of start-ups with creative ideas and technology that can potentially bring a change to the society, include, going to banks to acquire bank loans or getting a funding via research and scholarship programs. However, this process is cumbersome, involves a lot of time and eligibility constraints. The aim of this project is to eliminate the middleman (bank) and create a platform for Northeastern Students by connecting students to alumni investors through a Peer-2-Peer lending system which would enable students to acquire loans for their entrepreneurial ventures with the help of strong alumni networks.
-
-
-The aim is to create a platform that is decentralized and has a secure environment for loan transactions and is beneficial for both borrowers and lenders. This platform would provide flexible financing options for students, and alumni will also benefit from earning good returns as the middleman (bank) is obsolete in this picture.
-
-
-Objective
-
-The main objective of the P2P platform for northeastern students is to:
-
-
-1.Help students (borrowers) to bring forward their start up ideas and get funding from alumni investors
-
-
-2.Help Alumni (lenders) invest in and fund student start-ups, negotiate loan payment terms and gain back returns on their investments
-
-Theory for P2P Lending Platform
-
-
-The P2P lending platform provides a secure environment where borrowers can seek loans in exchange for startup ideas, and lenders can directly invest without intermediaries. Users create profiles as borrowers or lenders, containing personal details, startup categories, and business ideas. Borrowers can search for lenders, submit loan applications with terms such as amount, repayment plan, interest rate, collateral, and financial projections, while lenders can review profiles and connect directly to discuss investments.
+Tableau: [P2P Lending Platform Overview](https://public.tableau.com/app/profile/tanmayi.shurpali/viz/P2P-Lending-System/P2PLendingSystem-PlatformOverview)
 
 
 
-The system supports multiple loans per borrower and lender, maintains loan histories, audit logs for transparency, dispute management to pause transactions when needed, real-time notifications for key events, and feedback and rating mechanisms. A built-in referral system encourages platform growth while enabling informed, direct, and transparent lending decisions.
+---
 
-Requirements
+## Project Background
 
+Traditional funding routes for student entrepreneurs involve banks, research grants, and scholarship programs. These processes are slow, rigid, and loaded with eligibility barriers. The idea behind this platform is to cut out the middleman entirely and connect students with startup ideas directly to alumni investors who want to fund them.
 
-1.A borrower (student) can establish one start up idea in their profile at one time, however, the idea can fall into any category (tech, health, finance, fashion etc.)
+The analytics layer built on top of this platform surfaces insights across the full loan lifecycle, from application and approval through funding, repayment, and dispute resolution. The goal was to build something that looks and functions like a real production analytics system, not just a class project.
 
-2.A borrower (student) can request zero to many loans.
+---
 
-3.A lender (investor/alumni) can invest in zero to many ideas.
+## Tech Stack
 
-4.One loan can have only one borrower (to prevent shared ownership on the loan)
+| Layer | Technology |
+|---|---|
+| Database | PostgreSQL hosted on Supabase |
+| Data Generation | Python, Faker |
+| Data Transformation | SQL Views, SQLAlchemy, psycopg2 |
+| Dashboard | Streamlit, Plotly |
+| Business Intelligence | Tableau Public |
+| Deployment | Streamlit Cloud |
+| Version Control | Git, GitHub |
 
-5.One loan can have multiple investors
+---
 
-6.One borrower can have different repayment schedules (as one borrower may have multiple investors)
+## Database Design
 
-7.One loan must have only one repayment schedule
+The relational schema was designed in MySQL and migrated to PostgreSQL on Supabase for cloud hosting. It consists of 18 normalized tables covering the full domain of a peer-to-peer lending platform.
 
-8.A borrower can have multiple transaction records
+**Core Tables**
 
-9.A transaction record is linked to only one loan application
+- User, Borrower, Lender
+- Loan_Application, Loan_Status, Loan_History
+- Repayment_Plan, Transaction_Record
+- Collateral, Dispute, Audit_Log
+- Notification, Feedback, Rating, Referral
+- Startup_Idea, Applies_for, Funds
 
-10.One loan application can have multiple transaction records
+**Key Design Decisions**
 
-11.A loan request can have zero or many collateral
+- Borrowers and Lenders inherit from a base User table using shared primary keys, enforcing referential integrity across all three user types
+- One loan can have multiple lenders but only one borrower, reflecting real P2P lending structures
+- Audit logs and loan history tables provide full traceability of every state change on the platform
+- Dispute management is tied directly to individual loans, allowing transactions to be paused during resolution
 
-12.A loan application can have different status (approved, pending, dispersed). This loan status may change over time
+---
 
-13.A dispute may be tied to one loan
+## Data Pipeline
 
-14.A user (both borrower and lender) can have multiple loan histories tied to them
+### Synthetic Data Generation
 
-15.A user (both borrower and lender) can receive multiple notifications
+Real user data was never used. All data was generated programmatically using Python's Faker library, which is the standard approach for building realistic synthetic datasets for portfolio and development projects.
 
-16.One loan application is tied to multiple audit logs
+The data generation script (`faker_seed.py`) connects directly to the Supabase PostgreSQL instance and inserts data across all 18 tables in the correct dependency order to satisfy foreign key constraints.
 
-17.One user is tied to multiple audit logs
+**Dataset Scale**
 
-18.One user (both borrower and lender) can have multiple ratings and feedback
+- 300 users (150 borrowers, 150 lenders)
+- 300 loan applications
+- 300 disputes, notifications, feedback records, ratings, transactions, collateral entries
+- 150 startup ideas (one per borrower)
+- 100 referrals
 
-19.A user can have multiple referrals
+Data was inserted in two phases. The first phase used hand-crafted SQL INSERT statements with obviously fake identifiers (emails ending in @xyz.com, phone numbers starting with 000) to establish the base dataset. The second phase used Faker to scale up to the full dataset size.
 
+### Environment and Credentials
+
+Database credentials are managed via a `.env` file locally using `python-dotenv`, and via Streamlit Cloud's secrets manager in the deployed environment. The `.env` file is excluded from version control via `.gitignore`.
+
+---
+
+## Analytics Layer
+
+Six SQL views were created in Supabase to serve as the analytics layer between the raw tables and the dashboard. These views compute derived metrics that would be expensive to recalculate on every query.
+
+**vw_loan_summary**
+Joins loan applications with borrower, lender, status, approval, fund, and repayment data into a single flat view. Used as the primary reporting layer for loan-level analysis.
+
+**vw_borrower_risk**
+Computes per-borrower risk metrics including loan-to-value ratio, collateral coverage percentage, rejection rate, dispute count, and average rating. Uses NULLIF to handle division-by-zero edge cases safely.
+
+**vw_lender_performance**
+Aggregates lender activity including total capital deployed, fund status breakdown (completed, pending, cancelled, partial), average interest rate, and average borrower rating of each lender.
+
+**vw_repayment_health**
+Calculates repayment progress per loan including total paid, outstanding balance, repayment completion percentage, and payment health classification (On Track, Due Soon, Overdue) using CURRENT_DATE comparisons.
+
+**vw_platform_overview**
+Monthly aggregation of loan volume, approval rates, rejection rates, and dispute counts. Uses DATE_TRUNC to bucket by month and computes approval rate as a percentage using NULLIF-safe division.
+
+**vw_startup_funding**
+Joins startup ideas with borrower loan data to show total funding received per startup, approval rates, collateral coverage, and dispute frequency per idea.
+
+---
+
+## Streamlit Dashboard
+
+The dashboard connects live to the Supabase database via psycopg2 on every page load. There is no caching layer or static data involved. All charts and tables reflect the current state of the database.
+
+### Pages
+
+**Home**
+Project overview explaining the platform concept, tech stack breakdown, and a summary of what each analytics page covers.
+
+**Platform Overview**
+Monthly loan volume bar chart, approval rate trend line, application status donut chart, and a combined loans vs disputes chart. KPI cards show total loans, total volume, average approval rate, average interest rate, and total disputes.
+
+**Borrower Risk Analysis**
+Top borrowers by average loan amount, loan-to-value ratio distribution, rejection rate vs dispute count scatter plot colored by borrower rating, and collateral coverage distribution. Full sortable data table included.
+
+**Lender Performance**
+Top lenders by total capital deployed, fund status donut chart, rating vs total amount lent scatter plot, and lender rating distribution histogram. Full sortable data table included.
+
+**Repayment Health**
+Repayment status breakdown, payment health bar chart (On Track, Due Soon, Overdue), repayment completion distribution, and outstanding balance vs loan amount scatter colored by payment health. Filterable table by payment health status.
+
+### Design
+
+The dashboard uses a custom CSS theme with DM Serif Display for headings and DM Sans for body text.
+Each chart includes an insight callout below it explaining what the data shows in plain language.
+
+---
+
+## Tableau Dashboard
+
+A Tableau Public dashboard was built using CSV exports of the six SQL views. The dashboard covers platform-level analytics with four sheets composed into a single interactive view.
+
+**Loan Volume with Month-over-Month Growth**
+Dual axis chart combining a bar chart of monthly loan volume with a line showing month-over-month percentage change. A dashed reference line at zero separates growth months from decline months. Uses a LOOKUP table calculation to compute MoM growth.
+
+**Approval Rate vs Platform Average**
+Bar chart where each bar is colored based on whether that month's approval rate is above or below the platform average. The platform average is computed using a FIXED LOD expression and rendered as a constant reference line. Above-average months are colored green and below-average months are colored coral.
+
+**Cumulative Loan Volume**
+Area chart using a RUNNING_SUM table calculation to show cumulative platform growth from launch. A secondary line shows actual monthly volume, and a linear trend line from the Analytics pane shows the overall directional trend.
+
+**Loan Count vs Average Interest Rate**
+Dual axis chart showing total loans as bars colored by whether the average interest rate that month is above or below the platform average (computed via FIXED LOD), with the interest rate itself as a secondary line. Reveals whether high-volume months correlate with more or less competitive interest rates.
+
+---
+
+## Project Structure
+
+```
+Peer-2-Peer-Lending-System/
+│
+├── app.py                  # Streamlit dashboard
+├── faker_seed.py           # Synthetic data generation script
+├── export_to_csv.py        # Exports SQL views to CSV for Tableau
+├── requirements.txt        # Python dependencies
+├── .env                    # Local environment variables (not committed)
+├── .gitignore
+│
+├── tableau_data/           # CSV exports for Tableau Public
+│   ├── vw_platform_overview.csv
+│   ├── vw_borrower_risk.csv
+│   ├── vw_lender_performance.csv
+│   ├── vw_repayment_health.csv
+│   ├── vw_loan_summary.csv
+│   └── vw_startup_funding.csv
+│
+└── DMA_SQL_SCRIPT.sql      # Original MySQL schema
+```
+
+---
+
+## Setup and Running Locally
+
+**Prerequisites**
+- Python 3.9 or higher
+- A Supabase account with the schema and data loaded
+- pip
+
+**Installation**
+
+```bash
+git clone https://github.com/tanmayi123/Peer-2-Peer-Lending-System.git
+cd Peer-2-Peer-Lending-System
+pip install -r requirements.txt
+```
+
+**Environment Setup**
+
+Create a `.env` file in the root directory:
+
+```
+DB_URL=postgresql://postgres.YOUR_PROJECT_REF:YOUR_PASSWORD@aws-0-us-east-1.pooler.supabase.com:6543/postgres
+```
+
+**Run the dashboard**
+
+```bash
+streamlit run app.py
+```
+
+**Regenerate synthetic data**
+
+```bash
+python faker_seed.py
+```
+
+**Export CSVs for Tableau**
+
+```bash
+python export_to_csv.py
+```
+
+---
+
+## Requirements
+
+```
+streamlit
+pandas
+plotly
+psycopg2-binary
+python-dotenv
+faker
+sqlalchemy
+```
+
+---
+
+## Key Analytical Concepts Used
+
+- Loan-to-value ratio as a borrower risk signal
+- Collateral coverage percentage to measure loan security
+- Month-over-month growth using LOOKUP table calculations in Tableau
+- FIXED LOD expressions to compute platform-wide averages independent of view filters
+- RUNNING_SUM to show cumulative platform growth over time
+- Repayment health classification using date arithmetic against CURRENT_DATE
+- Rejection rate as a proxy for borrower creditworthiness on the platform
+
+---
