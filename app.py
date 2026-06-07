@@ -18,7 +18,7 @@ def run_query(query):
     parsed = urllib.parse.urlparse(DB_URL)
     conn = psycopg2.connect(
         host=parsed.hostname,
-        port=parsed.port or 5432,
+        port=parsed.port or 6543,
         database=parsed.path.lstrip("/"),
         user=parsed.username,
         password=urllib.parse.unquote(parsed.password),
@@ -239,18 +239,6 @@ footer {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
 
-CHART_COLORS = {
-    "primary":   "#7C6AF7",
-    "secondary": "#F76A8A",
-    "tertiary":  "#4ECDC4",
-    "warning":   "#FFB347",
-    "success":   "#6BCB77",
-    "neutral":   "#C0C0D0",
-}
-
-PALETTE_SEQ  = ["#7C6AF7","#9B8DF9","#BAB0FB","#D8D3FD","#F0EEFF"]
-PALETTE_DIV  = ["#F76A8A","#FA9BAD","#FCC8D1","#D8D3FD","#BAB0FB","#7C6AF7"]
-
 PLOTLY_BASE = dict(
     paper_bgcolor="#ffffff",
     plot_bgcolor="#ffffff",
@@ -287,7 +275,16 @@ def apply_base(fig, x_vals=None):
         )
     return fig
 
-# ── SIDEBAR ──────────────────────────────────────────────────────────────────
+def insight(text, color="#7C6AF7", bg="#F8F7FF"):
+    st.markdown(f"""
+        <div style="background:{bg}; border-left:3px solid {color}; border-radius:0 8px 8px 0;
+                    padding:12px 16px; margin-top:8px; margin-bottom:8px;">
+            <div style="font-size:12px; font-weight:600; color:{color}; margin-bottom:4px">INSIGHT</div>
+            <div style="font-size:13px; color:#3A3A5A; line-height:1.6">{text}</div>
+        </div>
+    """, unsafe_allow_html=True)
+
+# ── SIDEBAR ───────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown('<div class="sidebar-brand">P2P Lending</div>', unsafe_allow_html=True)
     st.markdown('<div class="sidebar-sub">Analytics Platform</div>', unsafe_allow_html=True)
@@ -298,7 +295,7 @@ with st.sidebar:
         label="",
         options=[
             "Home",
-            "Platform Overview",
+            "Loan Activity",
             "Borrower Risk Analysis",
             "Lender Performance",
             "Repayment Health"
@@ -318,6 +315,7 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 
+# ── HOME ──────────────────────────────────────────────────────────────────────
 if page == "Home":
     st.markdown("""
         <div class="page-header">
@@ -330,14 +328,14 @@ if page == "Home":
     st.markdown("""
         <div style="max-width: 720px; margin-bottom: 40px;">
             <p style="font-size:16px; color:#3A3A5A; line-height:1.8; font-weight:300;">
-            Traditional funding for student entrepreneurs involves banks, research grants, and scholarship 
-            programs — processes that are slow, rigid, and full of eligibility barriers. This platform 
-            eliminates the middleman by connecting Northeastern University students directly to alumni 
+            Traditional funding for student entrepreneurs involves banks, research grants, and scholarship
+            programs, processes that are slow, rigid, and full of eligibility barriers. This platform stimulates a more dynamic funding ecosystem by
+            by eliminating the middleman by connecting Northeastern University students directly to alumni
             investors through a peer-to-peer lending system.
             </p>
             <p style="font-size:16px; color:#3A3A5A; line-height:1.8; font-weight:300; margin-top:16px;">
-            The analytics dashboard surfaces insights across the full loan lifecycle — from application 
-            and approval through funding, repayment, and dispute resolution — giving both borrowers and 
+            The analytics dashboard surfaces insights across the full loan lifecycle, from application
+            and approval through funding, repayment, and dispute resolution, giving both borrowers and
             lenders a transparent view of platform activity.
             </p>
         </div>
@@ -346,7 +344,6 @@ if page == "Home":
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns(3)
-
     with col1:
         st.markdown("""
             <div class="kpi-card">
@@ -355,7 +352,6 @@ if page == "Home":
                 <div class="kpi-sub">Hosted on Supabase, 18 tables, 3 user types</div>
             </div>
         """, unsafe_allow_html=True)
-
     with col2:
         st.markdown("""
             <div class="kpi-card">
@@ -364,7 +360,6 @@ if page == "Home":
                 <div class="kpi-sub">300 users, 300 loans, synthetic data generated programmatically</div>
             </div>
         """, unsafe_allow_html=True)
-
     with col3:
         st.markdown("""
             <div class="kpi-card">
@@ -378,19 +373,17 @@ if page == "Home":
     st.markdown('<div class="section-title">What Each Page Covers</div>', unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
-
     with col1:
         st.markdown("""
             <div style="background:#ffffff; border-radius:16px; padding:24px; border:1px solid #EEEEF4; margin-bottom:16px;">
-                <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#7C6AF7; font-weight:600; margin-bottom:8px">Platform Overview</div>
+                <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#7C6AF7; font-weight:600; margin-bottom:8px">Loan Activity</div>
                 <div style="font-size:14px; color:#3A3A5A; line-height:1.7; font-weight:300">Monthly loan volumes, approval rate trends, dispute frequency and application status breakdown across the full platform history</div>
             </div>
             <div style="background:#ffffff; border-radius:16px; padding:24px; border:1px solid #EEEEF4; margin-bottom:16px;">
                 <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#F76A8A; font-weight:600; margin-bottom:8px">Borrower Risk Analysis</div>
-                <div style="font-size:14px; color:#3A3A5A; line-height:1.7; font-weight:300">Loan-to-value ratios, collateral coverage, rejection rates and dispute counts per borrower — identifying high-risk and high-performing profiles</div>
+                <div style="font-size:14px; color:#3A3A5A; line-height:1.7; font-weight:300">Loan-to-value ratios, collateral coverage, rejection rates and dispute counts per borrower: identifying high-risk and high-performing profiles</div>
             </div>
         """, unsafe_allow_html=True)
-
     with col2:
         st.markdown("""
             <div style="background:#ffffff; border-radius:16px; padding:24px; border:1px solid #EEEEF4; margin-bottom:16px;">
@@ -423,13 +416,14 @@ if page == "Home":
             </div>
         """, unsafe_allow_html=True)
 
-# ── PAGE 1: PLATFORM OVERVIEW ────────────────────────────────────────────────
-if page == "Platform Overview":
+
+# ── PAGE 1: LOAN ACTIVITY ─────────────────────────────────────────────────────
+elif page == "Loan Activity":
 
     st.markdown("""
         <div class="page-header">
             <div class="accent-bar"></div>
-            <div class="page-title">Platform Overview</div>
+            <div class="page-title">Loan Activity</div>
             <div class="page-subtitle">Monthly loan activity, approval trends, and platform-wide health metrics</div>
         </div>
     """, unsafe_allow_html=True)
@@ -438,19 +432,19 @@ if page == "Platform Overview":
     df["month"] = pd.to_datetime(df["month"])
     df["month_label"] = df["month"].dt.strftime("%b %Y")
 
-    total_loans     = int(df["total_loans"].sum())
-    total_volume    = float(df["total_loan_volume"].sum())
-    avg_approval    = float(df["approval_rate_pct"].mean())
-    avg_interest    = float(df["avg_interest_rate"].mean())
-    total_disputes  = int(df["total_disputes"].sum())
+    total_loans    = int(df["total_loans"].sum())
+    total_volume   = float(df["total_loan_volume"].sum())
+    avg_approval   = float(df["approval_rate_pct"].mean())
+    avg_interest   = float(df["avg_interest_rate"].mean())
+    total_disputes = int(df["total_disputes"].sum())
 
     c1, c2, c3, c4, c5 = st.columns(5)
     for col, label, value, sub in [
-        (c1, "Total Loans", f"{total_loans:,}", "across all months"),
-        (c2, "Loan Volume", f"${total_volume:,.0f}", "total disbursed"),
-        (c3, "Avg Approval Rate", f"{avg_approval:.1f}%", "of applications"),
-        (c4, "Avg Interest Rate", f"{avg_interest:.2f}%", "across portfolio"),
-        (c5, "Total Disputes", f"{total_disputes:,}", "logged on platform"),
+        (c1, "Total Loans",       f"{total_loans:,}",        "across all months"),
+        (c2, "Loan Volume",       f"${total_volume:,.0f}",   "total disbursed"),
+        (c3, "Avg Approval Rate", f"{avg_approval:.1f}%",    "of applications"),
+        (c4, "Avg Interest Rate", f"{avg_interest:.2f}%",    "across portfolio"),
+        (c5, "Total Disputes",    f"{total_disputes:,}",     "logged on platform"),
     ]:
         col.markdown(f"""
             <div class="kpi-card">
@@ -467,27 +461,28 @@ if page == "Platform Overview":
     with col1:
         st.markdown('<div class="section-title">Monthly Loan Volume</div>', unsafe_allow_html=True)
         fig = go.Figure(go.Bar(
-            x=df["month_label"], y=df["total_loan_volume"].astype(float),
+            x=df["month_label"],
+            y=df["total_loan_volume"].astype(float),
             marker=dict(
                 color=df["total_loan_volume"].astype(float),
-                colorscale=[[0,"#D8D3FD"],[1,"#7C6AF7"]],
+                colorscale=[[0, "#D8D3FD"], [1, "#7C6AF7"]],
                 showscale=False
             )
         ))
         apply_base(fig)
         fig.update_layout(
-    xaxis_title="",
-    yaxis_title="Volume ($)",
-    xaxis=dict(
-        tickmode="array",
-        tickvals=df["month_label"].tolist()[::3],
-        ticktext=df["month_label"].tolist()[::3],
-        tickangle=-35,
-        tickfont=dict(color="#4A4A6A", size=12),
-        gridcolor="#EEEEF4",
-    )
-)
+            xaxis_title="", yaxis_title="Volume ($)",
+            xaxis=dict(
+                tickmode="array",
+                tickvals=df["month_label"].tolist()[::3],
+                ticktext=df["month_label"].tolist()[::3],
+                tickangle=-35,
+                tickfont=dict(color="#4A4A6A", size=12),
+                gridcolor="#EEEEF4",
+            )
+        )
         st.plotly_chart(fig, use_container_width=True)
+        insight("Volume peaked sharply around Oct 2024 at close to $875k then fell off quickly — this spike likely reflects a concentrated cohort of borrowers entering the platform at the same time rather than sustained organic growth")
 
     with col2:
         st.markdown('<div class="section-title">Approval Rate Trend</div>', unsafe_allow_html=True)
@@ -503,18 +498,18 @@ if page == "Platform Overview":
         ))
         apply_base(fig)
         fig.update_layout(
-    yaxis_range=[0,100],
-    yaxis_title="Approval Rate (%)",
-    xaxis=dict(
-        tickmode="array",
-        tickvals=df["month_label"].tolist()[::3],
-        ticktext=df["month_label"].tolist()[::3],
-        tickangle=-35,
-        tickfont=dict(color="#4A4A6A", size=12),
-        gridcolor="#EEEEF4",
-    )
-)
+            yaxis_range=[0, 100], yaxis_title="Approval Rate (%)",
+            xaxis=dict(
+                tickmode="array",
+                tickvals=df["month_label"].tolist()[::3],
+                ticktext=df["month_label"].tolist()[::3],
+                tickangle=-35,
+                tickfont=dict(color="#4A4A6A", size=12),
+                gridcolor="#EEEEF4",
+            )
+        )
         st.plotly_chart(fig, use_container_width=True)
+        insight("Approval rates are highly volatile and repeatedly drop to near 0% across the timeline — this is more likely a data artifact from months with very few applications than a signal of tightening lender criteria")
 
     col1, col2 = st.columns(2)
 
@@ -530,26 +525,28 @@ if page == "Platform Overview":
             labels=list(status_totals.keys()),
             values=list(status_totals.values()),
             hole=0.55,
-            marker_colors=["#7C6AF7","#F76A8A","#FFB347","#4ECDC4"],
+            marker_colors=["#7C6AF7", "#F76A8A", "#FFB347", "#4ECDC4"],
             textinfo="percent+label",
             textfont_size=13,
         ))
         apply_base(fig)
-        fig.update_layout(showlegend=False, margin=dict(l=16,r=16,t=16,b=16))
+        fig.update_layout(showlegend=False, margin=dict(l=16, r=16, t=16, b=16))
         st.plotly_chart(fig, use_container_width=True)
+        insight(
+            "Just over a third of applications are approved while rejections, pending, and under review together account for the remaining 63% — the high share of non-approved applications points to a selective and process-heavy lending environment",
+            color="#F76A8A", bg="#FFF7F8"
+        )
 
     with col2:
         st.markdown('<div class="section-title">Loans vs Disputes by Month</div>', unsafe_allow_html=True)
         fig = go.Figure()
         fig.add_trace(go.Bar(
             x=df["month_label"], y=df["total_loans"],
-            name="Total Loans",
-            marker_color="#BAB0FB"
+            name="Total Loans", marker_color="#BAB0FB"
         ))
         fig.add_trace(go.Scatter(
             x=df["month_label"], y=df["total_disputes"],
-            name="Disputes",
-            mode="lines+markers",
+            name="Disputes", mode="lines+markers",
             line=dict(color="#F76A8A", width=2.5),
             marker=dict(size=6)
         ))
@@ -559,16 +556,20 @@ if page == "Platform Overview":
             yaxis_title="Count"
         )
         st.plotly_chart(fig, use_container_width=True)
+        insight(
+            "Disputes match loan counts almost exactly every month, including the Oct 2024 peak — this 1:1 ratio is by design in the dataset and represents the audit trail built into each loan rather than a genuine conflict rate",
+            color="#F76A8A", bg="#FFF7F8"
+        )
 
     st.markdown('<div class="section-title">Monthly Breakdown</div>', unsafe_allow_html=True)
     display_df = df[[
-        "month_label","total_loans","total_loan_volume",
-        "avg_loan_amount","avg_interest_rate",
-        "approved","rejected","approval_rate_pct","total_disputes"
+        "month_label", "total_loans", "total_loan_volume",
+        "avg_loan_amount", "avg_interest_rate",
+        "approved", "rejected", "approval_rate_pct", "total_disputes"
     ]].copy()
     display_df.columns = [
-        "Month","Loans","Volume ($)","Avg Amount ($)",
-        "Avg Rate (%)","Approved","Rejected","Approval Rate (%)","Disputes"
+        "Month", "Loans", "Volume ($)", "Avg Amount ($)",
+        "Avg Rate (%)", "Approved", "Rejected", "Approval Rate (%)", "Disputes"
     ]
     st.dataframe(display_df, use_container_width=True, hide_index=True)
 
@@ -593,10 +594,10 @@ elif page == "Borrower Risk Analysis":
 
     c1, c2, c3, c4 = st.columns(4)
     for col, label, value, sub in [
-        (c1, "Avg Loan-to-Value", f"{avg_ltv:.2f}x", "across borrowers"),
-        (c2, "Avg Rejection Rate", f"{avg_rejection:.1f}%", "of applications"),
-        (c3, "Avg Disputes", f"{avg_disputes:.1f}", "per borrower"),
-        (c4, "Avg Borrower Rating", f"{avg_rating:.2f}", "out of 5"),
+        (c1, "Avg Loan-to-Value",  f"{avg_ltv:.2f}x",       "across borrowers"),
+        (c2, "Avg Rejection Rate", f"{avg_rejection:.1f}%",  "of applications"),
+        (c3, "Avg Disputes",       f"{avg_disputes:.1f}",    "per borrower"),
+        (c4, "Avg Borrower Rating",f"{avg_rating:.2f}",      "out of 5"),
     ]:
         col.markdown(f"""
             <div class="kpi-card">
@@ -619,7 +620,7 @@ elif page == "Borrower Risk Analysis":
             orientation="h",
             marker=dict(
                 color=top20["avg_loan_amount"].astype(float),
-                colorscale=[[0,"#D8D3FD"],[1,"#7C6AF7"]],
+                colorscale=[[0, "#D8D3FD"], [1, "#7C6AF7"]],
                 showscale=False
             )
         ))
@@ -630,6 +631,7 @@ elif page == "Borrower Risk Analysis":
             yaxis_title=""
         )
         st.plotly_chart(fig, use_container_width=True)
+        insight("The top 20 borrowers sit in a tight band between $60k and $80k — there is no single outlier pulling far ahead, which suggests borrowing limits or application norms are keeping individual exposure relatively uniform")
 
     with col2:
         st.markdown('<div class="section-title">Loan-to-Value Distribution</div>', unsafe_allow_html=True)
@@ -642,6 +644,7 @@ elif page == "Borrower Risk Analysis":
         apply_base(fig)
         fig.update_layout(xaxis_title="LTV Ratio", yaxis_title="Borrower Count")
         st.plotly_chart(fig, use_container_width=True)
+        insight("The vast majority of borrowers sit between 1x and 2x LTV with a long tail stretching to 10x — those outlier borrowers are significantly undercollateralised and represent the highest default risk on the platform")
 
     col1, col2 = st.columns(2)
 
@@ -654,7 +657,7 @@ elif page == "Borrower Risk Analysis":
             hover_name="borrower_name",
             size="total_loans",
             color="avg_rating",
-            color_continuous_scale=["#F76A8A","#FFB347","#6BCB77"],
+            color_continuous_scale=["#F76A8A", "#FFB347", "#6BCB77"],
             labels={
                 "rejection_rate_pct": "Rejection Rate (%)",
                 "total_disputes": "Total Disputes",
@@ -663,6 +666,10 @@ elif page == "Borrower Risk Analysis":
         )
         apply_base(fig)
         st.plotly_chart(fig, use_container_width=True)
+        insight(
+            "Several borrowers show rejection rates above 200% relative to approvals while still accumulating up to 6 disputes — these are the highest friction profiles on the platform and worth monitoring closely for repeat application behaviour",
+            color="#4ECDC4", bg="#F0FDFB"
+        )
 
     with col2:
         st.markdown('<div class="section-title">Collateral Coverage Distribution</div>', unsafe_allow_html=True)
@@ -675,21 +682,25 @@ elif page == "Borrower Risk Analysis":
         apply_base(fig)
         fig.update_layout(xaxis_title="Collateral Coverage (%)", yaxis_title="Borrower Count")
         st.plotly_chart(fig, use_container_width=True)
+        insight(
+            "Most borrowers cluster below 100% collateral coverage with a handful of outliers extending to 500% — the heavily left-skewed distribution means a large portion of the portfolio is technically undercollateralised on average",
+            color="#4ECDC4", bg="#F0FDFB"
+        )
 
     st.markdown('<div class="section-title">Full Borrower Risk Table</div>', unsafe_allow_html=True)
     risk_df = df[[
-        "borrower_name","total_loans","avg_loan_amount",
-        "avg_loan_to_value_ratio","avg_collateral_coverage_pct",
-        "total_disputes","rejection_rate_pct","avg_rating"
+        "borrower_name", "total_loans", "avg_loan_amount",
+        "avg_loan_to_value_ratio", "avg_collateral_coverage_pct",
+        "total_disputes", "rejection_rate_pct", "avg_rating"
     ]].copy()
     risk_df.columns = [
-        "Borrower","Loans","Avg Loan ($)","LTV Ratio",
-        "Collateral Cover (%)","Disputes","Rejection Rate (%)","Avg Rating"
+        "Borrower", "Loans", "Avg Loan ($)", "LTV Ratio",
+        "Collateral Cover (%)", "Disputes", "Rejection Rate (%)", "Avg Rating"
     ]
     st.dataframe(risk_df, use_container_width=True, hide_index=True)
 
 
-# ── PAGE 3: LENDER PERFORMANCE ───────────────────────────────────────────────
+# ── PAGE 3: LENDER PERFORMANCE ────────────────────────────────────────────────
 elif page == "Lender Performance":
 
     st.markdown("""
@@ -709,10 +720,10 @@ elif page == "Lender Performance":
 
     c1, c2, c3, c4 = st.columns(4)
     for col, label, value, sub in [
-        (c1, "Total Amount Lent", f"${total_lent:,.0f}", "across all lenders"),
-        (c2, "Avg Lender Rating", f"{avg_rating:.2f}", "out of 5"),
-        (c3, "Completed Fundings", f"{total_completed:,}", "fully settled"),
-        (c4, "Cancelled Fundings", f"{total_cancelled:,}", "withdrawn"),
+        (c1, "Total Amount Lent",  f"${total_lent:,.0f}",    "across all lenders"),
+        (c2, "Avg Lender Rating",  f"{avg_rating:.2f}",      "out of 5"),
+        (c3, "Completed Fundings", f"{total_completed:,}",   "fully settled"),
+        (c4, "Cancelled Fundings", f"{total_cancelled:,}",   "withdrawn"),
     ]:
         col.markdown(f"""
             <div class="kpi-card">
@@ -735,7 +746,7 @@ elif page == "Lender Performance":
             orientation="h",
             marker=dict(
                 color=top20["total_amount_lent"].astype(float),
-                colorscale=[[0,"#FCC8D1"],[1,"#F76A8A"]],
+                colorscale=[[0, "#FCC8D1"], [1, "#F76A8A"]],
                 showscale=False
             )
         ))
@@ -746,26 +757,34 @@ elif page == "Lender Performance":
             yaxis_title=""
         )
         st.plotly_chart(fig, use_container_width=True)
+        insight(
+            "Gregory Hernandez leads at $1.35M with a noticeable gap before the next tier — while the rest of the top 20 are relatively clustered, that top lender alone represents a meaningful concentration of deployed capital on the platform",
+            color="#F76A8A", bg="#FFF7F8"
+        )
 
     with col2:
         st.markdown('<div class="section-title">Fund Status Breakdown</div>', unsafe_allow_html=True)
         fund_totals = {
-            "Completed":  int(df["completed_fundings"].sum()),
-            "Pending":    int(df["pending_fundings"].sum()),
-            "Cancelled":  int(df["cancelled_fundings"].sum()),
-            "Partial":    int(df["partial_fundings"].sum()),
+            "Completed": int(df["completed_fundings"].sum()),
+            "Pending":   int(df["pending_fundings"].sum()),
+            "Cancelled": int(df["cancelled_fundings"].sum()),
+            "Partial":   int(df["partial_fundings"].sum()),
         }
         fig = go.Figure(go.Pie(
             labels=list(fund_totals.keys()),
             values=list(fund_totals.values()),
             hole=0.55,
-            marker_colors=["#6BCB77","#FFB347","#F76A8A","#7C6AF7"],
+            marker_colors=["#6BCB77", "#FFB347", "#F76A8A", "#7C6AF7"],
             textinfo="percent+label",
             textfont_size=13,
         ))
         apply_base(fig)
-        fig.update_layout(showlegend=False, margin=dict(l=16,r=16,t=16,b=16))
+        fig.update_layout(showlegend=False, margin=dict(l=16, r=16, t=16, b=16))
         st.plotly_chart(fig, use_container_width=True)
+        insight(
+            "Fund statuses are split almost evenly four ways at roughly 25% each — the fact that cancelled fundings nearly match completed ones suggests a significant number of lender-borrower agreements are falling apart before settlement",
+            color="#4ECDC4", bg="#F0FDFB"
+        )
 
     col1, col2 = st.columns(2)
 
@@ -778,7 +797,7 @@ elif page == "Lender Performance":
             hover_name="lender_name",
             size="total_loans_funded",
             color="avg_interest_rate",
-            color_continuous_scale=[[0,"#BAB0FB"],[1,"#7C6AF7"]],
+            color_continuous_scale=[[0, "#BAB0FB"], [1, "#7C6AF7"]],
             labels={
                 "total_amount_lent": "Total Amount Lent ($)",
                 "avg_rating": "Avg Rating",
@@ -786,8 +805,9 @@ elif page == "Lender Performance":
             }
         )
         apply_base(fig)
-        fig.update_layout(yaxis_range=[0,5])
+        fig.update_layout(yaxis_range=[0, 5])
         st.plotly_chart(fig, use_container_width=True)
+        insight("Ratings are spread across all levels regardless of capital deployed, with most lenders clustering between $0 and $0.5M — the one outlier near $1.5M holds a mid-range rating, suggesting volume alone does not build borrower trust")
 
     with col2:
         st.markdown('<div class="section-title">Lender Rating Distribution</div>', unsafe_allow_html=True)
@@ -800,21 +820,25 @@ elif page == "Lender Performance":
         apply_base(fig)
         fig.update_layout(xaxis_title="Avg Rating", yaxis_title="Lender Count")
         st.plotly_chart(fig, use_container_width=True)
+        insight(
+            "The distribution is bimodal with peaks at 4 and 5, and a notable dip at 3 — most lenders are rated either very highly or not at all by borrowers, with few landing in the middle of the scale",
+            color="#F76A8A", bg="#FFF7F8"
+        )
 
     st.markdown('<div class="section-title">Full Lender Performance Table</div>', unsafe_allow_html=True)
     perf_df = df[[
-        "lender_name","total_loans_funded","total_amount_lent",
-        "avg_loan_amount","avg_interest_rate","completed_fundings",
-        "cancelled_fundings","total_disputes","avg_rating"
+        "lender_name", "total_loans_funded", "total_amount_lent",
+        "avg_loan_amount", "avg_interest_rate", "completed_fundings",
+        "cancelled_fundings", "total_disputes", "avg_rating"
     ]].copy()
     perf_df.columns = [
-        "Lender","Loans Funded","Total Lent ($)","Avg Loan ($)",
-        "Avg Rate (%)","Completed","Cancelled","Disputes","Avg Rating"
+        "Lender", "Loans Funded", "Total Lent ($)", "Avg Loan ($)",
+        "Avg Rate (%)", "Completed", "Cancelled", "Disputes", "Avg Rating"
     ]
     st.dataframe(perf_df, use_container_width=True, hide_index=True)
 
 
-# ── PAGE 4: REPAYMENT HEALTH ─────────────────────────────────────────────────
+# ── PAGE 4: REPAYMENT HEALTH ──────────────────────────────────────────────────
 elif page == "Repayment Health":
 
     st.markdown("""
@@ -854,23 +878,24 @@ elif page == "Repayment Health":
     with col1:
         st.markdown('<div class="section-title">Repayment Status Breakdown</div>', unsafe_allow_html=True)
         status_counts = df["repayment_status"].value_counts().reset_index()
-        status_counts.columns = ["Status","Count"]
+        status_counts.columns = ["Status", "Count"]
         fig = go.Figure(go.Pie(
             labels=status_counts["Status"],
             values=status_counts["Count"],
             hole=0.55,
-            marker_colors=["#6BCB77","#7C6AF7","#F76A8A"],
+            marker_colors=["#6BCB77", "#7C6AF7", "#F76A8A"],
             textinfo="percent+label",
             textfont_size=13,
         ))
         apply_base(fig)
-        fig.update_layout(showlegend=False, margin=dict(l=16,r=16,t=16,b=16))
+        fig.update_layout(showlegend=False, margin=dict(l=16, r=16, t=16, b=16))
         st.plotly_chart(fig, use_container_width=True)
+        insight("Every single loan in the portfolio is partially paid with no fully paid or unpaid loans present — this is consistent with a dataset where all loans have had at least one installment processed but none have reached their final repayment date")
 
     with col2:
         st.markdown('<div class="section-title">Payment Health Breakdown</div>', unsafe_allow_html=True)
         health_counts = df["payment_health"].value_counts().reset_index()
-        health_counts.columns = ["Health","Count"]
+        health_counts.columns = ["Health", "Count"]
         color_map = {
             "Overdue":  "#F76A8A",
             "Due Soon": "#FFB347",
@@ -884,6 +909,10 @@ elif page == "Repayment Health":
         apply_base(fig)
         fig.update_layout(xaxis_title="", yaxis_title="Number of Loans", showlegend=False)
         st.plotly_chart(fig, use_container_width=True)
+        insight(
+            "Around 195 loans are on track while roughly 100 are overdue and only a handful are due soon — the low due soon count suggests the dataset does not have many loans approaching their next payment window at the time of snapshot",
+            color="#F76A8A", bg="#FFF7F8"
+        )
 
     col1, col2 = st.columns(2)
 
@@ -898,6 +927,7 @@ elif page == "Repayment Health":
         apply_base(fig)
         fig.update_layout(xaxis_title="Repayment Completion (%)", yaxis_title="Loan Count")
         st.plotly_chart(fig, use_container_width=True)
+        insight("The distribution drops off sharply after 5% with very few loans above 10% complete — nearly all borrowers are in the earliest stages of repayment, which is expected given the synthetic repayment schedules used in this dataset")
 
     with col2:
         st.markdown('<div class="section-title">Outstanding Balance vs Loan Amount</div>', unsafe_allow_html=True)
@@ -921,20 +951,24 @@ elif page == "Repayment Health":
         )
         apply_base(fig)
         st.plotly_chart(fig, use_container_width=True)
+        insight(
+            "Outstanding balance tracks loan amount almost perfectly in a straight line across all payment health categories — overdue loans are not concentrated at any particular loan size, which confirms that repayment struggles are borrower-specific rather than driven by loan magnitude",
+            color="#4ECDC4", bg="#F0FDFB"
+        )
 
     st.markdown('<div class="section-title">Repayment Health Table</div>', unsafe_allow_html=True)
     filter_opt = st.selectbox(
         "Filter by payment health",
-        ["All","Overdue","Due Soon","On Track"]
+        ["All", "Overdue", "Due Soon", "On Track"]
     )
     filtered = df if filter_opt == "All" else df[df["payment_health"] == filter_opt]
     table_df = filtered[[
-        "borrower_name","lender_name","loan_amount",
-        "total_paid","outstanding_balance","repayment_pct",
-        "repayment_status","payment_health"
+        "borrower_name", "lender_name", "loan_amount",
+        "total_paid", "outstanding_balance", "repayment_pct",
+        "repayment_status", "payment_health"
     ]].copy()
     table_df.columns = [
-        "Borrower","Lender","Loan Amount ($)","Total Paid ($)",
-        "Outstanding ($)","Repaid (%)","Repayment Status","Payment Health"
+        "Borrower", "Lender", "Loan Amount ($)", "Total Paid ($)",
+        "Outstanding ($)", "Repaid (%)", "Repayment Status", "Payment Health"
     ]
     st.dataframe(table_df, use_container_width=True, hide_index=True)
