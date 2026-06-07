@@ -330,7 +330,7 @@ if page == "Home":
             <p style="font-size:16px; color:#3A3A5A; line-height:1.8; font-weight:300;">
             Traditional funding for student entrepreneurs involves banks, research grants, and scholarship
             programs, processes that are slow, rigid, and full of eligibility barriers. This platform simulates a more dynamic funding ecosystem by
-            by eliminating the middleman by connecting Northeastern University students directly to alumni
+            eliminating the middleman by connecting Northeastern University students directly to alumni
             investors through a peer-to-peer lending system.
             </p>
             <p style="font-size:16px; color:#3A3A5A; line-height:1.8; font-weight:300; margin-top:16px;">
@@ -482,7 +482,7 @@ elif page == "Loan Activity":
             )
         )
         st.plotly_chart(fig, use_container_width=True)
-        insight("Volume peaked sharply around Oct 2024 at close to $875k then fell off quickly — this spike likely reflects a concentrated cohort of borrowers entering the platform at the same time rather than sustained organic growth")
+        insight("Volume peaked sharply around Oct 2024 at close to $875k then fell off quickly, this spike likely reflects a concentrated cohort of borrowers entering the platform at the same time rather than sustained organic growth")
 
     with col2:
         st.markdown('<div class="section-title">Approval Rate Trend</div>', unsafe_allow_html=True)
@@ -509,7 +509,7 @@ elif page == "Loan Activity":
             )
         )
         st.plotly_chart(fig, use_container_width=True)
-        insight("Approval rates are highly volatile and repeatedly drop to near 0% across the timeline — this is more likely a data artifact from months with very few applications than a signal of tightening lender criteria")
+        insight("Approval rates are highly volatile and repeatedly drop to near 0% across the timeline , this is more likely a data artifact from months with very few applications than a signal of tightening lender criteria")
 
     col1, col2 = st.columns(2)
 
@@ -533,7 +533,7 @@ elif page == "Loan Activity":
         fig.update_layout(showlegend=False, margin=dict(l=16, r=16, t=16, b=16))
         st.plotly_chart(fig, use_container_width=True)
         insight(
-            "Just over a third of applications are approved while rejections, pending, and under review together account for the remaining 63% — the high share of non-approved applications points to a selective and process-heavy lending environment",
+            "Just over a third of applications are approved while rejections, pending, and under review together account for the remaining 63%, the high share of non-approved applications points to a selective and process-heavy lending environment",
             color="#F76A8A", bg="#FFF7F8"
         )
 
@@ -557,7 +557,7 @@ elif page == "Loan Activity":
         )
         st.plotly_chart(fig, use_container_width=True)
         insight(
-            "Disputes match loan counts almost exactly every month, including the Oct 2024 peak — this 1:1 ratio is by design in the dataset and represents the audit trail built into each loan rather than a genuine conflict rate",
+            "Disputes match loan counts almost exactly every month, including the Oct 2024 peak, this 1:1 ratio is by design in the dataset and represents the audit trail built into each loan rather than a genuine conflict rate",
             color="#F76A8A", bg="#FFF7F8"
         )
 
@@ -631,7 +631,7 @@ elif page == "Borrower Risk Analysis":
             yaxis_title=""
         )
         st.plotly_chart(fig, use_container_width=True)
-        insight("The top 20 borrowers sit in a tight band between $60k and $80k — there is no single outlier pulling far ahead, which suggests borrowing limits or application norms are keeping individual exposure relatively uniform")
+        insight("The top 20 borrowers sit in a tight band between $60k and $80k, there is no single outlier pulling far ahead, which suggests borrowing limits or application norms are keeping individual exposure relatively uniform")
 
     with col2:
         st.markdown('<div class="section-title">Loan-to-Value Distribution</div>', unsafe_allow_html=True)
@@ -644,7 +644,7 @@ elif page == "Borrower Risk Analysis":
         apply_base(fig)
         fig.update_layout(xaxis_title="LTV Ratio", yaxis_title="Borrower Count")
         st.plotly_chart(fig, use_container_width=True)
-        insight("The vast majority of borrowers sit between 1x and 2x LTV with a long tail stretching to 10x — those outlier borrowers are significantly undercollateralised and represent the highest default risk on the platform")
+        insight("The vast majority of borrowers sit between 1x and 2x LTV with a long tail stretching to 10x, those outlier borrowers are significantly undercollateralised and represent the highest default risk on the platform")
 
     col1, col2 = st.columns(2)
 
@@ -667,7 +667,7 @@ elif page == "Borrower Risk Analysis":
         apply_base(fig)
         st.plotly_chart(fig, use_container_width=True)
         insight(
-            "Several borrowers show rejection rates above 200% relative to approvals while still accumulating up to 6 disputes — these are the highest friction profiles on the platform and worth monitoring closely for repeat application behaviour",
+            "Several borrowers show rejection rates above 200% relative to approvals while still accumulating up to 6 disputes, these are the highest friction profiles on the platform and worth monitoring closely for repeat application behaviour",
             color="#4ECDC4", bg="#F0FDFB"
         )
 
@@ -683,7 +683,7 @@ elif page == "Borrower Risk Analysis":
         fig.update_layout(xaxis_title="Collateral Coverage (%)", yaxis_title="Borrower Count")
         st.plotly_chart(fig, use_container_width=True)
         insight(
-            "Most borrowers cluster below 100% collateral coverage with a handful of outliers extending to 500% — the heavily left-skewed distribution means a large portion of the portfolio is technically undercollateralised on average",
+            "Most borrowers cluster below 100% collateral coverage with a handful of outliers extending to 500%, the heavily left-skewed distribution means a large portion of the portfolio is technically undercollateralised on average",
             color="#4ECDC4", bg="#F0FDFB"
         )
 
@@ -758,7 +758,7 @@ elif page == "Lender Performance":
         )
         st.plotly_chart(fig, use_container_width=True)
         insight(
-            "Gregory Hernandez leads at $1.35M with a noticeable gap before the next tier — while the rest of the top 20 are relatively clustered, that top lender alone represents a meaningful concentration of deployed capital on the platform",
+            "Gregory Hernandez leads at $1.35M with a noticeable gap before the next tier, while the rest of the top 20 are relatively clustered, that top lender alone represents a meaningful concentration of deployed capital on the platform",
             color="#F76A8A", bg="#FFF7F8"
         )
 
@@ -782,7 +782,7 @@ elif page == "Lender Performance":
         fig.update_layout(showlegend=False, margin=dict(l=16, r=16, t=16, b=16))
         st.plotly_chart(fig, use_container_width=True)
         insight(
-            "Fund statuses are split almost evenly four ways at roughly 25% each — the fact that cancelled fundings nearly match completed ones suggests a significant number of lender-borrower agreements are falling apart before settlement",
+            "Fund statuses are split almost evenly four ways at roughly 25% each, the fact that cancelled fundings nearly match completed ones suggests a significant number of lender-borrower agreements are falling apart before settlement",
             color="#4ECDC4", bg="#F0FDFB"
         )
 
@@ -807,7 +807,7 @@ elif page == "Lender Performance":
         apply_base(fig)
         fig.update_layout(yaxis_range=[0, 5])
         st.plotly_chart(fig, use_container_width=True)
-        insight("Ratings are spread across all levels regardless of capital deployed, with most lenders clustering between $0 and $0.5M — the one outlier near $1.5M holds a mid-range rating, suggesting volume alone does not build borrower trust")
+        insight("Ratings are spread across all levels regardless of capital deployed, with most lenders clustering between $0 and $0.5M, the one outlier near $1.5M holds a mid-range rating, suggesting volume alone does not build borrower trust")
 
     with col2:
         st.markdown('<div class="section-title">Lender Rating Distribution</div>', unsafe_allow_html=True)
@@ -821,7 +821,7 @@ elif page == "Lender Performance":
         fig.update_layout(xaxis_title="Avg Rating", yaxis_title="Lender Count")
         st.plotly_chart(fig, use_container_width=True)
         insight(
-            "The distribution is bimodal with peaks at 4 and 5, and a notable dip at 3 — most lenders are rated either very highly or not at all by borrowers, with few landing in the middle of the scale",
+            "The distribution is bimodal with peaks at 4 and 5, and a notable dip at 3, most lenders are rated either very highly or not at all by borrowers, with few landing in the middle of the scale",
             color="#F76A8A", bg="#FFF7F8"
         )
 
@@ -890,7 +890,7 @@ elif page == "Repayment Health":
         apply_base(fig)
         fig.update_layout(showlegend=False, margin=dict(l=16, r=16, t=16, b=16))
         st.plotly_chart(fig, use_container_width=True)
-        insight("Every single loan in the portfolio is partially paid with no fully paid or unpaid loans present — this is consistent with a dataset where all loans have had at least one installment processed but none have reached their final repayment date")
+        insight("Every single loan in the portfolio is partially paid with no fully paid or unpaid loans present, this is consistent with a dataset where all loans have had at least one installment processed but none have reached their final repayment date")
 
     with col2:
         st.markdown('<div class="section-title">Payment Health Breakdown</div>', unsafe_allow_html=True)
@@ -910,7 +910,7 @@ elif page == "Repayment Health":
         fig.update_layout(xaxis_title="", yaxis_title="Number of Loans", showlegend=False)
         st.plotly_chart(fig, use_container_width=True)
         insight(
-            "Around 195 loans are on track while roughly 100 are overdue and only a handful are due soon — the low due soon count suggests the dataset does not have many loans approaching their next payment window at the time of snapshot",
+            "Around 195 loans are on track while roughly 100 are overdue and only a handful are due soon, the low due soon count suggests the dataset does not have many loans approaching their next payment window at the time of snapshot",
             color="#F76A8A", bg="#FFF7F8"
         )
 
@@ -927,7 +927,7 @@ elif page == "Repayment Health":
         apply_base(fig)
         fig.update_layout(xaxis_title="Repayment Completion (%)", yaxis_title="Loan Count")
         st.plotly_chart(fig, use_container_width=True)
-        insight("The distribution drops off sharply after 5% with very few loans above 10% complete — nearly all borrowers are in the earliest stages of repayment, which is expected given the synthetic repayment schedules used in this dataset")
+        insight("The distribution drops off sharply after 5% with very few loans above 10% complete, nearly all borrowers are in the earliest stages of repayment, which is expected given the synthetic repayment schedules used in this dataset")
 
     with col2:
         st.markdown('<div class="section-title">Outstanding Balance vs Loan Amount</div>', unsafe_allow_html=True)
@@ -952,7 +952,7 @@ elif page == "Repayment Health":
         apply_base(fig)
         st.plotly_chart(fig, use_container_width=True)
         insight(
-            "Outstanding balance tracks loan amount almost perfectly in a straight line across all payment health categories — overdue loans are not concentrated at any particular loan size, which confirms that repayment struggles are borrower-specific rather than driven by loan magnitude",
+            "Outstanding balance tracks loan amount almost perfectly in a straight line across all payment health categories, overdue loans are not concentrated at any particular loan size, which confirms that repayment struggles are borrower-specific rather than driven by loan magnitude",
             color="#4ECDC4", bg="#F0FDFB"
         )
 
