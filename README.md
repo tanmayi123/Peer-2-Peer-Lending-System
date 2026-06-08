@@ -2,7 +2,7 @@
 
 A full-stack data analytics and data engineering project built around a peer-to-peer lending platform connecting University student borrowers with alumni investors. The project covers the entire data pipeline from database design and synthetic data generation through to a deployed interactive dashboard and published Tableau visualizations. This project is only a simulation of P2P Lending system.
 
-Live Dashboard: [Streamlit App](https://your-app.streamlit.app)
+Live Dashboard: [Streamlit App](https://p2p-lending-system.streamlit.app/)
 
 Tableau: [P2P Lending Platform Overview](https://public.tableau.com/app/profile/tanmayi.shurpali/viz/P2P-Lending-System/P2PLendingSystem-PlatformOverview)
 
